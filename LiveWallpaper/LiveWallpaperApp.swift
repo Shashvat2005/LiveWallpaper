@@ -34,18 +34,7 @@ struct LiveWallpaperApp: App {
             "LiveWallpaper",
             systemImage: "play.rectangle"
         ) {
-
-            Button("Choose Wallpaper") {
-
-                WallpaperManager.shared.chooseWallpaper()
-            }
-
-            Divider()
-
-            Button("Quit") {
-
-                NSApplication.shared.terminate(nil)
-            }
+            MenuContent()
         }
     }
 }

@@ -9,6 +9,7 @@ class WallpaperManager: ObservableObject {
     static let shared = WallpaperManager()
 
     @Published var player: AVPlayer?
+    @Published var isPaused = false
 
     private init() {}
 
@@ -56,5 +57,23 @@ class WallpaperManager: ObservableObject {
 
             print("LOOP")
         }
+    }
+    
+    func togglePlayback() {
+
+        guard let player else {
+            return
+        }
+
+        if isPaused {
+
+            player.play()
+
+        } else {
+
+            player.pause()
+        }
+
+        isPaused.toggle()
     }
 }
