@@ -11,6 +11,10 @@ struct MenuContent: View {
         WallpaperManager.shared
 
     var body: some View {
+        Text("🎥 \(wallpaperManager.currentWallpaperName)")
+            .font(.caption)
+        
+        Divider()
 
         Button("Choose Wallpaper") {
 

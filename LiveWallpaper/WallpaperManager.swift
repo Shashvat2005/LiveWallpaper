@@ -15,17 +15,54 @@ enum WallpaperMode: String {
 class WallpaperManager: ObservableObject {
 
     static let shared = WallpaperManager()
+    private let wallpaperKey = "wallpaperBookmark"
 
     @Published var player: AVPlayer?
     @Published var isPaused = false
     @Published var launchAtLogin = false
     @Published var videoGravity: AVLayerVideoGravity = .resizeAspectFill
     @Published var wallpaperMode: WallpaperMode = .fill
+    @Published var currentWallpaperName = "None"
 
     private init() {
 
         launchAtLogin =
             SMAppService.mainApp.status == .enabled
+        
+        loadSavedWallpaper()
+    }
+    
+    func loadSavedWallpaper() {
+        guard let bookmark =
+            UserDefaults.standard.data(
+                forKey: wallpaperKey
+            )
+        else {
+            print("No saved wallpaper")
+            return
+        }
+
+        do {
+
+            var stale = false
+
+            let url = try URL(
+                resolvingBookmarkData: bookmark,
+                options: [],
+                relativeTo: nil,
+                bookmarkDataIsStale: &stale
+            )
+            print("Loading:", url.path)
+            print("Exists:", FileManager.default.fileExists(atPath: url.path))
+
+            print("Restored:", url.path)
+
+            loadWallpaper(from: url)
+
+        } catch {
+
+            print("Bookmark load failed:", error)
+        }
     }
 
     func chooseWallpaper() {
@@ -44,6 +81,26 @@ class WallpaperManager: ObservableObject {
             guard let url = panel.url else {
                 return
             }
+            
+            do {
+
+                let bookmark = try url.bookmarkData(
+                    options: [],
+                    includingResourceValuesForKeys: nil,
+                    relativeTo: nil
+                )
+
+                UserDefaults.standard.set(
+                    bookmark,
+                    forKey: wallpaperKey
+                )
+
+                print("Bookmark saved")
+
+            } catch {
+
+                print("Bookmark save failed:", error)
+            }
 
             loadWallpaper(from: url)
         }
@@ -53,6 +110,8 @@ class WallpaperManager: ObservableObject {
 
         print("Loading:", url.path)
 
+        currentWallpaperName = url.lastPathComponent
+        
         let item = AVPlayerItem(url: url)
 
         let player = AVPlayer(playerItem: item)
@@ -60,7 +119,7 @@ class WallpaperManager: ObservableObject {
         self.player = player
 
         player.play()
-
+        
         NotificationCenter.default.addObserver(
             forName: .AVPlayerItemDidPlayToEndTime,
             object: item,
