@@ -2,53 +2,37 @@ import SwiftUI
 import AVFoundation
 import AppKit
 
-class PlayerNSView: NSView {
-
-    let playerLayer = AVPlayerLayer()
-
-    override init(frame frameRect: NSRect) {
-        super.init(frame: frameRect)
-
-        wantsLayer = true
-
-        layer = CALayer()
-        layer?.addSublayer(playerLayer)
-
-        playerLayer.videoGravity = .resizeAspectFill
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func layout() {
-        super.layout()
-
-        playerLayer.frame = self.bounds
-        
-        print(bounds)
-    }
-}
-
 struct PlayerView: NSViewRepresentable {
 
     let player: AVPlayer
 
-    func makeNSView(context: Context) -> PlayerNSView {
+    func makeNSView(context: Context) -> NSView {
 
-        let view = PlayerNSView()
+        let view = NSView()
 
-        view.playerLayer.player = player
+        let playerLayer = AVPlayerLayer(player: player)
+
+        playerLayer.videoGravity = .resizeAspectFill
+
+        view.layer = playerLayer
+        view.wantsLayer = true
 
         return view
     }
 
     func updateNSView(
-        _ nsView: PlayerNSView,
+        _ nsView: NSView,
         context: Context
     ) {
 
-        nsView.playerLayer.player = player
-        nsView.playerLayer.frame = nsView.bounds
+        guard let playerLayer =
+            nsView.layer as? AVPlayerLayer
+        else {
+            return
+        }
+
+        playerLayer.player = player
+
+        playerLayer.frame = nsView.bounds
     }
 }

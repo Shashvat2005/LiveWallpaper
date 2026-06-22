@@ -20,7 +20,10 @@ class WindowManager {
         window.orderBack(nil)
 
         window.styleMask = [.borderless]
-        window.isOpaque = true
+        window.backgroundColor = .clear
+        window.isOpaque = false
+        window.titleVisibility = .hidden
+        window.titlebarAppearsTransparent = true
         window.hasShadow = false
         window.ignoresMouseEvents = true
 

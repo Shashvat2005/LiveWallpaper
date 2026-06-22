@@ -9,10 +9,18 @@ import SwiftUI
 
 @main
 struct LiveWallpaperApp: App {
+
+    init() {
+        print("APP STARTED")
+    }
+
     var body: some Scene {
+
         WindowGroup {
+
             ContentView()
                 .onAppear {
+
                     DispatchQueue.main.asyncAfter(
                         deadline: .now() + 0.5
                     ) {
@@ -20,6 +28,24 @@ struct LiveWallpaperApp: App {
                         WindowManager.makeBorderless()
                     }
                 }
+        }
+
+        MenuBarExtra(
+            "LiveWallpaper",
+            systemImage: "play.rectangle"
+        ) {
+
+            Button("Choose Wallpaper") {
+
+                WallpaperManager.shared.chooseWallpaper()
+            }
+
+            Divider()
+
+            Button("Quit") {
+
+                NSApplication.shared.terminate(nil)
+            }
         }
     }
 }
