@@ -12,7 +12,7 @@ struct PlayerView: NSViewRepresentable {
 
         let playerLayer = AVPlayerLayer(player: player)
 
-        playerLayer.videoGravity = .resizeAspectFill
+        playerLayer.videoGravity = WallpaperManager.shared.videoGravity
 
         view.layer = playerLayer
         view.wantsLayer = true
@@ -30,6 +30,7 @@ struct PlayerView: NSViewRepresentable {
         else {
             return
         }
+        playerLayer.videoGravity = WallpaperManager.shared.videoGravity
 
         playerLayer.player = player
 

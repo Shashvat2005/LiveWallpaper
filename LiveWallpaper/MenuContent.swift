@@ -16,6 +16,38 @@ struct MenuContent: View {
 
             wallpaperManager.chooseWallpaper()
         }
+        Divider()
+
+        Divider()
+
+        Text("Wallpaper Mode")
+
+        Button(
+            wallpaperManager.wallpaperMode == .fill
+            ? "✓ Fill Screen"
+            : "Fill Screen"
+        ) {
+
+            wallpaperManager.setWallpaperMode(.fill)
+        }
+
+        Button(
+            wallpaperManager.wallpaperMode == .fit
+            ? "✓ Fit Screen"
+            : "Fit Screen"
+        ) {
+
+            wallpaperManager.setWallpaperMode(.fit)
+        }
+
+        Button(
+            wallpaperManager.wallpaperMode == .stretch
+            ? "✓ Stretch"
+            : "Stretch"
+        ) {
+
+            wallpaperManager.setWallpaperMode(.stretch)
+        }
 
         Divider()
 

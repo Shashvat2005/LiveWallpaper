@@ -4,6 +4,13 @@ import AppKit
 import Combine
 import ServiceManagement
 
+enum WallpaperMode: String {
+
+    case fill
+    case fit
+    case stretch
+}
+
 @MainActor
 class WallpaperManager: ObservableObject {
 
@@ -12,6 +19,8 @@ class WallpaperManager: ObservableObject {
     @Published var player: AVPlayer?
     @Published var isPaused = false
     @Published var launchAtLogin = false
+    @Published var videoGravity: AVLayerVideoGravity = .resizeAspectFill
+    @Published var wallpaperMode: WallpaperMode = .fill
 
     private init() {
 
@@ -101,6 +110,32 @@ class WallpaperManager: ObservableObject {
         } catch {
 
             print("Launch at login error:", error)
+        }
+    }
+    
+    func setVideoGravity(
+        _ gravity: AVLayerVideoGravity
+    ) {
+
+        videoGravity = gravity
+    }
+    
+    func setWallpaperMode(
+        _ mode: WallpaperMode
+    ) {
+
+        wallpaperMode = mode
+
+        switch mode {
+
+        case .fill:
+            videoGravity = .resizeAspectFill
+
+        case .fit:
+            videoGravity = .resizeAspect
+
+        case .stretch:
+            videoGravity = .resize
         }
     }
 }
