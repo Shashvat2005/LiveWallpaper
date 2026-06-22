@@ -2,6 +2,7 @@ import Foundation
 import AVFoundation
 import AppKit
 import Combine
+import ServiceManagement
 
 @MainActor
 class WallpaperManager: ObservableObject {
@@ -10,8 +11,13 @@ class WallpaperManager: ObservableObject {
 
     @Published var player: AVPlayer?
     @Published var isPaused = false
+    @Published var launchAtLogin = false
 
-    private init() {}
+    private init() {
+
+        launchAtLogin =
+            SMAppService.mainApp.status == .enabled
+    }
 
     func chooseWallpaper() {
 
@@ -75,5 +81,26 @@ class WallpaperManager: ObservableObject {
         }
 
         isPaused.toggle()
+    }
+    
+    func toggleLaunchAtLogin() {
+
+        do {
+
+            if launchAtLogin {
+
+                try SMAppService.mainApp.unregister()
+
+            } else {
+
+                try SMAppService.mainApp.register()
+            }
+
+            launchAtLogin.toggle()
+
+        } catch {
+
+            print("Launch at login error:", error)
+        }
     }
 }

@@ -27,6 +27,20 @@ struct MenuContent: View {
 
             wallpaperManager.togglePlayback()
         }
+        
+        Divider()
+        
+        Toggle(
+            "Launch at Login",
+            isOn: Binding(
+                get: {
+                    wallpaperManager.launchAtLogin
+                },
+                set: { _ in
+                    wallpaperManager.toggleLaunchAtLogin()
+                }
+            )
+        )
 
         Divider()
 
